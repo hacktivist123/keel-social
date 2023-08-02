@@ -36,6 +36,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ setAuthenticated }) => {
       if (success) {
         // Handle successful login (redirect, show message, etc.)
         setAuthenticated(true);
+       // Fetch and store user todos after successful login
+        await authContext.fetchUserPosts();
       } else {
         setError('Login failed. Please check your credentials.');
       }

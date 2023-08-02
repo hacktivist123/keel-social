@@ -13,8 +13,17 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   return (
     <Card key={post.id} className="post-card">
-      <Content>{post.title}</Content>
-      <CreatedAt>{post.createdAt}</CreatedAt>
+        <Content>{post.title}</Content>
+        <CreatedAt>
+        {new Date(post.createdAt).toLocaleString('en-US', {
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric',
+              hour12: true
+            })}
+       </CreatedAt>
     </Card>
   );
 };

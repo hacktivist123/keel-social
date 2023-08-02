@@ -1,9 +1,13 @@
 // pages/index.tsx
 
 import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+
+
 import LoginForm from '../components/LoginForm';
 import PostCard from '../components/PostCard';
 import NewPostForm from '../components/NewPostForm';
+
 
 const Home = () => {
   const [userPosts, setUserPosts] = useState([]);
@@ -36,22 +40,57 @@ const Home = () => {
   };
 
   return (
-    <div>
+    <Container>
+      <ContentContainer>
       {authenticated ? (
         <>
-          <h1>Welcome to Keel Social</h1>
+          <Title>Welcome to Keel Social</Title>
           <NewPostForm onPostCreated={handlePostCreated} />
-          <div>
+          <br/>
+          <Card>
             {userPosts.map((post) => (
               <PostCard key={post.id} post={post} />
             ))}
-          </div>
+          </Card>
         </>
       ) : (
         <LoginForm setAuthenticated={setAuthenticated} />
       )}
-    </div>
+      </ContentContainer>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  background-color: #f5f8fa;
+`;
+
+const ContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px;
+`;
+
+const Card = styled.div`
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+`;
+
+const Title = styled.h1`
+  display: flex;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  align-items: center;
+  justify-content: center;
+`;
 
 export default Home;
