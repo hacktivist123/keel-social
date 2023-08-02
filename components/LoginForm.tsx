@@ -39,18 +39,28 @@ const LoginForm: React.FC<LoginFormProps> = ({ setAuthenticated }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: formData.email, password: formData.password }),
+        body: JSON.stringify({
+          emailPassword: {
+            email: formData.email,
+            password: formData.password,
+          },
+        }),
       });
 
       if (response.ok) {
         const data = await response.json();
         setAuthenticated(true);
       }  else {
-        setError('Invalid email or password.');
+        const data = await response.json();
+        setError(`${data.message}`);
       }
     } catch (error) {
       console.error(error)
     }
+  };
+
+  const handleInputFocus = () => {
+    setError('');
   };
 
   return (
@@ -63,6 +73,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setAuthenticated }) => {
         placeholder="Email"
         value={formData.email}
         onChange={handleInputChange}
+        onFocus={handleInputFocus}
       />
       <Input
         type="password"
@@ -70,6 +81,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setAuthenticated }) => {
         placeholder="Password"
         value={formData.password}
         onChange={handleInputChange}
+        onFocus={handleInputFocus}
       />
       <Button onClick={handleLogin}>Login</Button>
     </LoginFormContainer>
