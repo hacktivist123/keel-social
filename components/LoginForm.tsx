@@ -2,12 +2,15 @@
 
 import { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
+import { useAuth } from './AuthContext'; // Import useAuth from your AuthContext
 
 interface LoginFormProps {
   setAuthenticated: (value: boolean) => void;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ setAuthenticated }) => {
+  const authContext = useAuth(); // Access the AuthContext using the useAuth hook
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -22,42 +25,26 @@ const LoginForm: React.FC<LoginFormProps> = ({ setAuthenticated }) => {
     }));
   };
 
-
   const handleLogin = async () => {
     if (!formData.email || !formData.password) {
       setError('Please provide both email and password.');
       return;
     }
     try {
+      const success = await authContext.login(formData.email, formData.password);
 
-      // Simulate API response delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Make API request for authentication using email and password
-      const response = await fetch(process.env.NEXT_PUBLIC_API_LOGIN_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          emailPassword: {
-            email: formData.email,
-            password: formData.password,
-          },
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
+      if (success) {
+        // Handle successful login (redirect, show message, etc.)
         setAuthenticated(true);
-      }  else {
-        const data = await response.json();
-        setError(`${data.message}`);
+      } else {
+        setError('Login failed. Please check your credentials.');
       }
     } catch (error) {
-      console.error(error)
+      console.error(error);
+      setError('An error occurred while trying to authenticate.');
     }
   };
+
 
   const handleInputFocus = () => {
     setError('');
@@ -89,7 +76,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ setAuthenticated }) => {
 };
 
 
-
 const LoginFormContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -108,6 +94,8 @@ const slideIn = keyframes`
     opacity: 1;
   }
 `;
+
+
 
 const Input = styled.input`
 background-color: #f8f8f8;

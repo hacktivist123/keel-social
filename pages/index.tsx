@@ -5,7 +5,7 @@ import LoginForm from '../components/LoginForm';
 import PostCard from '../components/PostCard';
 import NewPostForm from '../components/NewPostForm';
 
-const Home = (token: string) => {
+const Home = () => {
   const [userPosts, setUserPosts] = useState([]);
   const [authenticated, setAuthenticated] = useState(false);
 
@@ -14,15 +14,11 @@ const Home = (token: string) => {
       // Fetch user's posts using the authentication token
       const fetchUserPosts = async () => {
         try {
-          const response = await fetch('API_USER_POSTS_URL', {
-            headers: {
-              Authorization: `Bearer ${token}`, // Replace with your authentication token
-            },
-          });
+          const response = await fetch(process.env.NEXT_PUBLIC_API_USER_POSTS_URL);
 
           if (response.ok) {
             const data = await response.json();
-            setUserPosts(data.title);
+            setUserPosts(data.results);
           } else {
             return <div>API error</div>
           }
@@ -33,7 +29,7 @@ const Home = (token: string) => {
 
       fetchUserPosts();
     }
-  }, [authenticated, token]);
+  }, [authenticated]);
 
   const handlePostCreated = (newPost) => {
     setUserPosts([newPost, ...userPosts]);
@@ -43,8 +39,8 @@ const Home = (token: string) => {
     <div>
       {authenticated ? (
         <>
-          <h1>Welcome to Your Social Media App</h1>
-          <NewPostForm token={token} onPostCreated={handlePostCreated} />
+          <h1>Welcome to Keel Social</h1>
+          <NewPostForm onPostCreated={handlePostCreated} />
           <div>
             {userPosts.map((post) => (
               <PostCard key={post.id} post={post} />

@@ -1,43 +1,52 @@
 // components/NewPostForm.tsx
 
 import { useState } from 'react';
+import styled, {keyframes} from 'styled-components';
 
-import styled from 'styled-components';
+import { useAuth } from './AuthContext';
 
 interface NewPostFormProps {
   onPostCreated: (newPost: any) => void;
-  token: string
 }
 
-const NewPostForm: React.FC<NewPostFormProps> = ({ onPostCreated,token }) => {
+const NewPostForm: React.FC<NewPostFormProps> = ({ onPostCreated }) => {
+  const authContext = useAuth();
   const [content, setContent] = useState('');
+  const [error, setError] = useState('');
+
 
   const handleCreatePost = async () => {
     try {
       // Make API request to create a new post
-      const response = await fetch('API_CREATE_POST_URL', {
+      const response = await fetch(process.env.NEXT_PUBLIC_API_CREATE_POST_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${authContext.accessToken}`,
         },
-        body: JSON.stringify({ content }),
+        body: JSON.stringify({
+          title: content,
+        }),
       });
 
       if (response.ok) {
         const newPost = await response.json();
         onPostCreated(newPost);
         setContent('');
+        console.log('Post created successfully');
       } else {
-        return <div>API error</div>
+        const data = await response.json();
+        setError(data.message || 'An error occurred while creating the post.');
       }
     } catch (error) {
-      console.error(error)
+      console.error(error);
+      setError('An error occurred while creating the post.');
     }
   };
 
   return (
     <FormContainer className="new-post-form">
+        {error && <ErrorText>{error}</ErrorText>}
       <TextArea
         placeholder="What's on your mind?"
         value={content}
@@ -71,6 +80,23 @@ const Button = styled.button`
   border-radius: 4px;
   padding: 10px 20px;
   cursor: pointer;
+`;
+
+const slideIn = keyframes`
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+`;
+
+const ErrorText = styled.p`
+  color: red;
+  margin: 5px 0;
+  animation: ${slideIn} 0.5s ease-in-out;
 `;
 
 export default NewPostForm;
