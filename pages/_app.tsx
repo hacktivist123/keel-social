@@ -14,7 +14,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const theme = {
-  /* Define your theme variables here */
+  /* Define the theme variables here */
 };
 
 function MyApp({ Component, pageProps }: AppProps) {
