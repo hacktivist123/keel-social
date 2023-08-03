@@ -52,7 +52,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setAuthenticated }) => {
 
   return (
     <LoginFormContainer>
-      <h2>Keel Social Login</h2>
+      <h2>Keel Social</h2>
       {error && <ErrorText>{error}</ErrorText>}
       <Input
         type="email"
