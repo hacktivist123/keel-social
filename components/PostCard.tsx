@@ -1,5 +1,3 @@
-// components/PostCard.tsx
-
 import styled from 'styled-components';
 
 interface PostCardProps {

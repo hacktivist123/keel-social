@@ -1,9 +1,6 @@
-// components/LoginForm.tsx
-
 import { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { useAuth } from './AuthContext'; // Import useAuth from your AuthContext
-
+import { useAuth } from './AuthContext';
 interface LoginFormProps {
   setAuthenticated: (value: boolean) => void;
 }
@@ -34,7 +31,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setAuthenticated }) => {
       const success = await authContext.login(formData.email, formData.password);
 
       if (success) {
-        // Handle successful login (redirect, show message, etc.)
+        // Handle successful login
         setAuthenticated(true);
       } else {
         setError('Login failed. Please check your credentials.');
