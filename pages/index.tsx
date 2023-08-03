@@ -3,28 +3,44 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
+import { useAuth } from '../components/AuthContext';
 
 import LoginForm from '../components/LoginForm';
 import PostCard from '../components/PostCard';
 import NewPostForm from '../components/NewPostForm';
 
 
+
 const Home = () => {
   const [userPosts, setUserPosts] = useState([]);
   const [authenticated, setAuthenticated] = useState(false);
+  const authContext = useAuth();
+
 
   useEffect(() => {
     if (authenticated) {
       // Fetch user's posts using the authentication token
       const fetchUserPosts = async () => {
         try {
-          const response = await fetch(process.env.NEXT_PUBLIC_API_USER_POSTS_URL);
 
+          const response = await fetch(process.env.NEXT_PUBLIC_API_USER_POSTS_URL, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${authContext.accessToken}`,
+            },
+          });
+
+          if (!authContext.accessToken) {
+            console.error('AccessToken is null.'); // Debugging line
+            return;
+          }
           if (response.ok) {
             const data = await response.json();
-            setUserPosts(data.results);
+            await setUserPosts(data.results);
           } else {
-            return <div>API error</div>
+            const data = await response.json();
+            console.log(data.message)
           }
         } catch (error) {
           console.error(error)
@@ -33,7 +49,7 @@ const Home = () => {
 
       fetchUserPosts();
     }
-  }, [authenticated]);
+  }, [authenticated, authContext.accessToken]);
 
   const handlePostCreated = (newPost) => {
     setUserPosts([newPost, ...userPosts]);
