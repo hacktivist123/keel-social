@@ -4,7 +4,7 @@ interface AuthContextProps {
   isAuthenticated: boolean;
   accessToken: string | null;
   login: (email: string, password: string) => Promise<boolean>;
-  // logout: () => void;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -49,6 +49,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Update authentication state
       setIsAuthenticated(true);
 
+
       return true;
     } else {
       // Handle authentication error
@@ -62,16 +63,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 };
 
 
-  // const logout = () => {
-  //   // Clear the access token from state
-  //   setAccessToken(null);
+  const logout = () => {
+    // Clear the access token from state
+    setAccessToken(null);
 
-  //   // Update authentication state
-  //   setIsAuthenticated(false);
-  // };
+    // Update authentication state
+    setIsAuthenticated(false);
+  };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, accessToken,  login }}>
+    <AuthContext.Provider value={{ isAuthenticated, accessToken, logout, login }}>
       {children}
     </AuthContext.Provider>
   );

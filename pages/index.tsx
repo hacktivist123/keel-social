@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { useAuth } from '../components/AuthContext';
-
 import LoginForm from '../components/LoginForm';
 import PostCard from '../components/PostCard';
 import NewPostForm from '../components/NewPostForm';
@@ -15,6 +14,15 @@ const Home = () => {
   const [userPosts, setUserPosts] = useState([]);
   const [authenticated, setAuthenticated] = useState(false);
   const authContext = useAuth();
+
+
+  const handleLogout = () => {
+    authContext.logout()
+    // Redirect to the login page after logout
+    window.location.href = '/'
+    // Clear userPosts on logout
+    setUserPosts(null)
+  };
 
 
   useEffect(() => {
@@ -32,7 +40,7 @@ const Home = () => {
           });
 
           if (!authContext.accessToken) {
-            console.error('AccessToken is null.'); // Debugging line
+            console.error('AccessToken is null.'); // check for debugging accessToken
             return;
           }
           if (response.ok) {
@@ -60,6 +68,7 @@ const Home = () => {
       <ContentContainer>
       {authenticated ? (
         <>
+        <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
           <Title>Welcome to Keel Social</Title>
           <NewPostForm onPostCreated={handlePostCreated} />
           <br/>
@@ -108,5 +117,17 @@ const Title = styled.h1`
   align-items: center;
   justify-content: center;
 `;
+
+const LogoutButton = styled.button`
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 16px;
+`;
+
 
 export default Home;
