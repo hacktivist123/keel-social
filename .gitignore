@@ -37,3 +37,6 @@ next-env.d.ts
 
 # BFG
 .git.bfg-report/
+
+# Local Netlify folder
+.netlify
