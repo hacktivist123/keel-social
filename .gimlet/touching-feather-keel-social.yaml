@@ -1,0 +1,17 @@
+app: keel-social
+env: touching-feather
+namespace: default
+chart:
+  repository: https://chart.onechart.dev
+  name: static-site
+  version: 0.70.0
+values:
+  gitCloneUrl: https://github.com/hacktivist123/keel-social.git
+  gitRepository: hacktivist123/keel-social
+  gitSha: '{{ .SHA }}'
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+      kubernetes.io/ingress.class: nginx
+    host: hacktivist123-keel-social-giczzztr.gimlet.app
+    tlsEnabled: true
